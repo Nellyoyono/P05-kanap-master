@@ -1,2 +1,2 @@
-# P05-kanap-master
+# kanap
 
