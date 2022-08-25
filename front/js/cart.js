@@ -238,9 +238,9 @@ fetch(`http://localhost:3000/api/products/order`)
 .then(data => { 
 console.log(data);
 /*Une fois qu'on a notre id de commande, on redirige vers la page confirmation avec celui ci dans le lien*/
-//localStorage.clear();//vider le localStorage
-//localStorage.setItem("orderId", data.orderId);
-//document.location.href = "confirmation.html";
+localStorage.clear();//vider le localStorage
+localStorage.setItem("orderId", data.orderId);
+document.location.href = "confirmation.html";
 })
 
 // j'ajoute un message au cas où le serveur ne répond pas
