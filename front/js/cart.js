@@ -55,7 +55,7 @@ function calculate() {
   });  
 });  
 }
-//
+//Fonction mise à jour des quantités
 function updateCartWhenQuantityChange(e) {
     let element = this.closest("article");
     let idValue = element.getAttribute('data-id');
