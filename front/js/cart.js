@@ -5,6 +5,8 @@ let totalQuantityElement = document.getElementById('totalQuantity');
 let cartItems = document.getElementById('cart__items');
 let exemple = document.getElementsByClassName('cart__order__form__question');
 
+
+
 let data = [].map.call(exemple, item => item);
 
 console.log(data);
@@ -55,7 +57,7 @@ function calculate() {
   });  
 });  
 }
-//Fonction mise à jour des quantités
+//
 function updateCartWhenQuantityChange(e) {
     let element = this.closest("article");
     let idValue = element.getAttribute('data-id');
@@ -137,117 +139,125 @@ function post(e) {
     let cityValue = document.getElementById('city').value;
     let emailValue = document.getElementById('email').value;
     console.log(firstNameValue,lastNameValue, addressValue, cityValue, emailValue);
-
 }
-//-------------------Gestion du formulaire------------------//
-//Ecoute du bouton "Commander" pour passer la commande*/
 
-document.getElementById('order').addEventListener('click', (event) => {
-    event.preventDefault();////Envoi des informations client au localstorage et ecoute du panier 
-orderCommand();
-post(event);
-    });
+function productRecupId() {
+    let idProducts = [];//Construction d'un array depuis le local storage
+    //pour chaque produit on push dans le tableau idproducts
+    let cart = getCart();
+    for (let i = 0; i < cart.length; i++) {
+        idProducts.push(cart[i].id);
+    }
+    return idProducts;
+}
+//-----------------------------------------------Gestion du formulaire-----------------------------------------------------//
+//fonction validerformulaire 
 
-function orderCommand() {
-//on recupere des id coordonnées du formaulaire client 
+function formValidate() {
+//on recupere d'abord des coordonnées (id) du formulaire client 
 let firstNameValue = document.getElementById('firstName').value;
-    let lastNameValue = document.getElementById('lastName').value;
-    let addressValue = document.getElementById('address').value;
-    let cityValue = document.getElementById('city').value;
-    let emailValue = document.getElementById('email').value;
+let lastNameValue = document.getElementById('lastName').value;
+let addressValue = document.getElementById('address').value;
+let cityValue = document.getElementById('city').value;
+let emailValue = document.getElementById('email').value;
 
 //declaration Regex :*Création condition pour véririfer que toutes les entrées du formulaire sont remplies*
+let emailRegExp = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$'); //création de la regexp pour valider email
+let addressRegExp = new RegExp('^[a-zA-Z0-9-éè ]{3,80}$'); //création de la regexp pour valider l'adresse
+let cityRegExp = new RegExp('^[a-zA-Z]{2,30}$');//création de la regexp pour valider la ville
 
-let regex = new RegExp('/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/');//REGEX pour l'adresse et validation des conditions des entrées
-//let mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-//let regex = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}');
 
 
-if (regex.test(emailValue) === false)//si le mail n'est valide
+//gestion Validation des conditions d'entrées du formulaire 
+
+if (emailRegExp.test(emailValue) === false)//si le mail n'est valide
   {
     document.getElementById("emailErrorMsg").textContent =
-    "veuillez saisir une adresse mail correcte";///Bouton du formulaire et message d'erreur à afficher
-    return; 
+    "veuillez saisir une adresse mail correcte";
+    return false ; 
   }
 if (firstNameValue ==='')//si le mail n'est valide
 {
     document.getElementById("firstNameErrorMsg").textContent =
     "veuillez saisir un nom correct";  
-    return; 
+    return false; 
 }
 if (lastNameValue ==='')//si le mail n'est valide
 {
     document.getElementById("lastNameErrorMsg").textContent =
     "veuillez saisir un prénom correct";
-    return;
+    return false;
 }
-if (addressValue ==='')//si le mail n'est valide
+if (addressRegExp.test(addressValue) === false)//si le mail n'est valide
 {
     document.getElementById("addressErrorMsg").textContent =
     "veuillez saisir une adresse correcte";
-    return;
+    return false;
 }
-if (cityValue ==='')//si le mail n'est valide
+if (cityRegExp.test(cityValue)=== false)//si le mail n'est valide
 {
     document.getElementById("cityErrorMsg").textContent =
     "veuillez saisir un nom de ville correcte";
-    return;
+    return false;
 }
+  return true;
 }
 
-//Recup ID des produits du panier 
-    
-let idProduct = [];//def la variable du panier qui ne comportera que les id des produits choisi du localstorage
-    
-function recupIdProduct() {
-    // récupération des ids produit dans MON PANIER 
-    for (let i = 0; i < getCart.length; i++) {
-        idProduct.push(getCart[i].productID);// pour chaque canap dans mon cart je recup les info et je push l'id dans l'array productID
+//-----Gestion du bouton commander----//
+
+//Envoie du formulaire (informations client au localstorage)  au clic du bouton commander
+
+//Séléction du bouton 
+let order = document.getElementById('order');
+
+    order.addEventListener('click', (event) => {   //AddEventListener pour commander
+    event.preventDefault();
+    if (formValidate() === false){
+      return;
+      
     }
-    console.log(idProduct);
-    
 
-//*création de l'objet commande (contenant les infos du client + id des produits commandé)*/
-    let commande = {
-        contact: {
-            firstName: firstName.value,
-            lastName: lastName.value,
-            address: address.value,
-            city: city.value,
-            email: email.value,
-        },
-        products: idProduct,
-    };
-}
-/* à présent, on va envoyer notre objet contact et produits vers l'API*/
+//Si tous les éléments du formulaire sont  OK 
+//on Recup ID des produits du panier 
+//avec la fonction
+       
+//déclaration d'une variable contenant les ID
+        let productIDs = productRecupId();
 
-// on prépare les infos pour l'envoie en POST
-/*ensuite on défini les paramètres de notre requête*/
+//je mets les valeurs du formulaire et les produits sélectionnés dans un objet.
 
-function order() {
- // on envoie en POST
- let options = {
-    method: "POST",
-    body: JSON.stringify(order),
-    headers: { "Content-Type": "application/json" },
-}
-//*ici c'est la requête envoyant l'objet contact et la liste des id produits. L'API renvoi en échange l'id de commande*/
+//création de l'objet commande (contenant les infos du client et  id des produits commandés)
+        let order = {
+            contact: {
+                firstName: firstName.value,
+                lastName: lastName.value,
+                address: address.value,
+                city: city.value,
+                email: email.value,
+            },
+            products: productIDs,
+        };
 
-fetch(`http://localhost:3000/api/products/order`)
-.then(res => res.json())//Récupération de la réponse du serveur/
-.then(data => { 
-console.log(data);
-/*Une fois qu'on a notre id de commande, on redirige vers la page confirmation avec celui ci dans le lien*/
-//localStorage.clear();//vider le localStorage
-localStorage.setItem("orderId", data.orderId);
-document.location.href = "confirmation.html";
-})
+// Ensuite j'envoie le formulaire que j'envoie au serveur
 
-// j'ajoute un message au cas où le serveur ne répond pas
-.catch((error) => {
-console.log(error)
-});
-}
-
-
-
+// Création de l'entête de la requête  POST des informations du formulaire pour envoyer la commande
+        let options = {
+            method: "POST",//Envoie par requête POST
+            body: JSON.stringify(order),
+            headers: { "Content-Type": "application/json" },
+        };
+        console.log(options);
+        fetch("http://localhost:3000/api/products/order", options)
+     //récupération de la réponse
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                localStorage.clear();
+                let orderId = data.orderId;
+                //localStorage.setItem("order", JSON.stringify(orderId));//stockage de la réponse et redirectioon vers la page de confirmation de la commande
+                // document.location.href = `confirmation.html`;
+                window.location.assign(`confirmation.html?orderId=${orderId}`);
+            });
+    }
+);
