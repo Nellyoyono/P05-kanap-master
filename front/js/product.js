@@ -1,4 +1,3 @@
-// **OBJECTIF:LIEN ENTRE LE PRODUIT DE LA PAGE D'ACCEUIL ET LA PAGE PRODUIT// 
 
 //-------------------------------------------------------   RECUPERATION ID DU PRODUIT --------------------------------------------
 //Récupération de l'id depuis l'URL du produit grâce à la méthode window.location.herf 
