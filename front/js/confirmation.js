@@ -1,5 +1,5 @@
 
-/*Affichage produits via id dans url*/
+
 function showNoCommand() {
 /* récupération du numéro de commande dans l'url de la page */
 let params = new URL(document.location).searchParams;
