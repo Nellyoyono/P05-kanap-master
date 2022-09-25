@@ -20,7 +20,6 @@ fetch(`http://localhost:3000/api/products/${idProduct}`)
 //-------------------------------------------------------AFFICHAGE DU PRODUIT --------------------------------------------
 //depuis cette page l'utilisateur peut selectionner une quantite,une couleur et ajouter à son panier 
 
-//fonction pour lier les élements HTML que l'on va créer avec les données de l'api
 function afficherLeProduit  () {
 // choix couleur: définition des variables je parcour la liste des couleurs du produit 
     let choixColor = document.getElementById("colors");
