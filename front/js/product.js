@@ -51,10 +51,6 @@ function getCart() {
 
 //on implemente la methode mise a jour du panier 
 function updateCart(cart, product) {
-// si le panier a déjà des articles on récupère le panier existant et on parcours les articles pour chercher
-// si l'article existe  déja dans le panier
-//si l'article existe déjà on augmente avec la nouvelle quantité
-
   const isExist = (element) => element.id === product.id && element.color === product.color;
   let index = cart.findIndex(isExist);//recherhe les elements dans un tableau avec les conditions (si un produit existe il me renvoi a l'index et si existe pas il me renvoi a -1)
   console.log(index);
