@@ -71,7 +71,7 @@ function updateCartWhenQuantityChange(e) {
     setCart(cart);
     calculate();
 }
-//fonction supprimer pour supprimer un produit du panier//
+
 function deleteItemCart(id, color) {
     let cart = getCart();
     for(let i = 0; i<cart.length; i++) {
